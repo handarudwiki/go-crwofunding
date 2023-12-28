@@ -3,7 +3,7 @@ package connection
 import (
 	"log"
 
-	"github.com/handarudwiki/go-crowfunding/user"
+	"github.com/handarudwiki/go-crowfunding/module/user"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

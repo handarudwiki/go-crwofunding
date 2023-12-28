@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/handarudwiki/go-crowfunding/auth"
 	"github.com/handarudwiki/go-crowfunding/helper"
-	"github.com/handarudwiki/go-crowfunding/user"
+	"github.com/handarudwiki/go-crowfunding/module/user"
 )
 
 func Auth(authService auth.Service, userService user.Service) gin.HandlerFunc {
