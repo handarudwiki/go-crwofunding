@@ -3,6 +3,7 @@ package connection
 import (
 	"log"
 
+	"github.com/handarudwiki/go-crowfunding/module/campaign"
 	"github.com/handarudwiki/go-crowfunding/module/user"
 
 	"gorm.io/driver/mysql"
@@ -18,6 +19,8 @@ func GetConnection() *gorm.DB {
 	}
 
 	db.AutoMigrate(user.User{})
+	db.AutoMigrate(campaign.Campaign{})
+	db.AutoMigrate(&campaign.CampainImage{})
 
 	return db
 }

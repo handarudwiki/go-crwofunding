@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/handarudwiki/go-crowfunding/auth"
 	"github.com/handarudwiki/go-crowfunding/helper"
-	"github.com/handarudwiki/go-crowfunding/user"
+	"github.com/handarudwiki/go-crowfunding/module/user"
 )
 
 type userHandler struct {
