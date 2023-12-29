@@ -71,3 +71,29 @@ func (h *campaignHandler) GetCampaigns(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 	return
 }
+
+func (h *campaignHandler) GetCampaignByID(c *gin.Context) {
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		response := helper.ApiResponse("Failed to get one campaign", http.StatusInternalServerError, "error", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	detailCampaign, err := h.campaignService.FindBYID(id)
+
+	if err != nil {
+		response := helper.ApiResponse("Failed to get one campaign", http.StatusInternalServerError, "error", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	fotmattedCampaign := campaign.FormatDetailsCampaign(detailCampaign)
+
+	response := helper.ApiResponse("Sucees get detail campaign", http.StatusOK, "success", fotmattedCampaign)
+	c.JSON(http.StatusOK, response)
+	return
+}

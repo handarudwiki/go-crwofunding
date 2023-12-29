@@ -1,6 +1,10 @@
 package campaign
 
-import "time"
+import (
+	"time"
+
+	"github.com/handarudwiki/go-crowfunding/module/user"
+)
 
 type Campaign struct {
 	ID               uint      `gorm:"primaryKey,autoIncrement"`
@@ -15,6 +19,7 @@ type Campaign struct {
 	CreatedAt        time.Time `gorm:"default:CURRENT_TIMESTAMP"` // Menggunakan CURRENT_TIMESTAMP sebagai nilai default
 	UpdatedAt        time.Time `gorm:"default:CURRENT_TIMESTAMP"` // Menggunakan CURRENT_TIMESTAMP sebagai nilai default
 	CampaignImages   []CampainImage
+	User             user.User
 }
 
 type CampainImage struct {
