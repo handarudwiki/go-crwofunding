@@ -34,6 +34,7 @@ func main() {
 
 	api.GET("campaigns", campaignHandler.GetCampaigns)
 	api.GET("campaigns/:id", campaignHandler.GetCampaignByID)
+	api.POST("campaigns", middleware.Auth(authService, userService), campaignHandler.Create)
 
 	r.Run()
 }

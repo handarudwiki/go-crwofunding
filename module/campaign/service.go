@@ -1,8 +1,11 @@
 package campaign
 
+import "fmt"
+
 type Service interface {
 	FindCampaigns(userID int) ([]Campaign, error)
 	FindBYID(id int) (Campaign, error)
+	Create(input CreateCampignInput) (Campaign, error)
 }
 
 type service struct {
@@ -40,4 +43,27 @@ func (s *service) FindBYID(id int) (Campaign, error) {
 	}
 
 	return campaign, err
+}
+
+func (s *service) Create(input CreateCampignInput) (Campaign, error) {
+	campaign := Campaign{}
+	campaign.Name = input.Name
+	campaign.ShortDescription = input.ShortDescription
+	campaign.Description = input.Description
+	campaign.GoalAmount = input.GoalAmount
+	campaign.Perks = input.Perks
+	campaign.UserID = input.User.ID
+
+	// slug := fmt.Sprint("%s %d", inputc.Name, input.UserID)
+	slug := fmt.Sprintf("%s-%d", input.Name, input.User.ID)
+
+	campaign.Slug = slug
+
+	campaign, err := s.repository.Create(campaign)
+
+	if err != nil {
+		return campaign, err
+	}
+
+	return campaign, nil
 }

@@ -13,7 +13,23 @@ type CampaignFormatter struct {
 	CurrentAmount    int    `json:"current_amount"`
 }
 
-func FormatCampaign(campaigns []Campaign) []CampaignFormatter {
+func FormatCampaign(campaign Campaign) CampaignFormatter {
+	campaignFormatter := CampaignFormatter{}
+	campaignFormatter.ID = campaign.ID
+	campaignFormatter.Name = campaign.Name
+	campaignFormatter.UserID = campaign.UserID
+	campaignFormatter.ShortDescription = campaign.ShortDescription
+	campaignFormatter.Slug = campaign.Slug
+	campaignFormatter.GoalAmount = campaign.GoalAmount
+	campaignFormatter.CurrentAmount = campaign.CurrentAmount
+
+	if len(campaign.CampaignImages) > 0 {
+		campaignFormatter.ImageUrl = campaign.CampaignImages[0].Image
+	}
+	return campaignFormatter
+}
+
+func FormatCampaigns(campaigns []Campaign) []CampaignFormatter {
 
 	campignFormatters := []CampaignFormatter{}
 

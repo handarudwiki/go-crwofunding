@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/handarudwiki/go-crowfunding/helper"
 	"github.com/handarudwiki/go-crowfunding/module/campaign"
+	"github.com/handarudwiki/go-crowfunding/module/user"
 )
 
 type campaignHandler struct {
@@ -65,7 +66,7 @@ func (h *campaignHandler) GetCampaigns(c *gin.Context) {
 		return
 	}
 
-	campaignFormatter := campaign.FormatCampaign(campaigns)
+	campaignFormatter := campaign.FormatCampaigns(campaigns)
 
 	response := helper.ApiResponse("success get campaigns", http.StatusOK, "success", campaignFormatter)
 	c.JSON(http.StatusOK, response)
@@ -94,6 +95,37 @@ func (h *campaignHandler) GetCampaignByID(c *gin.Context) {
 	fotmattedCampaign := campaign.FormatDetailsCampaign(detailCampaign)
 
 	response := helper.ApiResponse("Sucees get detail campaign", http.StatusOK, "success", fotmattedCampaign)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
+func (h *campaignHandler) Create(c *gin.Context) {
+	var input campaign.CreateCampignInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errorMessage := gin.H{"error": helper.FormatError(err)}
+
+		response := helper.ApiResponse("Failed to create campaign", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+
+	input.User = currentUser
+
+	neWcampaign, err := h.campaignService.Create(input)
+
+	if err != nil {
+		response := helper.ApiResponse(err.Error(), http.StatusInternalServerError, "error", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	formattedCampaign := campaign.FormatCampaign(neWcampaign)
+	response := helper.ApiResponse("Campaign Created Succesfully", http.StatusOK, "success", formattedCampaign)
+
 	c.JSON(http.StatusOK, response)
 	return
 }

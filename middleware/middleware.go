@@ -47,7 +47,7 @@ func Auth(authService auth.Service, userService user.Service) gin.HandlerFunc {
 		// userId := int(claim["user_id"].(float64))
 		userId := int(claim["user_id"].(float64))
 
-		user, err := userService.GetUserBYID(userId)
+		user, err := userService.GetUserBYID(int(userId))
 
 		if err != nil {
 			response := helper.ApiResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
