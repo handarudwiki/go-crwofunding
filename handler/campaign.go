@@ -129,3 +129,44 @@ func (h *campaignHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 	return
 }
+
+func (h *campaignHandler) Update(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		response := helper.ApiResponse("Failed to update campaign", http.StatusInternalServerError, "error", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	var input campaign.CreateCampignInput
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	err = c.ShouldBindJSON(&input)
+
+	if err != nil {
+		errorMessage := gin.H{"error": helper.FormatError(err)}
+
+		response := helper.ApiResponse("Failed to create campaign", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	updatedCampaign, err := h.campaignService.Update(id, input)
+
+	if err != nil {
+		response := helper.ApiResponse("Failed to update campaign", http.StatusInternalServerError, "error", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	formattedCampaign := campaign.FormatCampaign(updatedCampaign)
+
+	response := helper.ApiResponse("Campaign successfully updated", http.StatusOK, "success", formattedCampaign)
+
+	c.JSON(http.StatusOK, response)
+	return
+
+}

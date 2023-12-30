@@ -1,11 +1,15 @@
 package campaign
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Service interface {
 	FindCampaigns(userID int) ([]Campaign, error)
 	FindBYID(id int) (Campaign, error)
 	Create(input CreateCampignInput) (Campaign, error)
+	Update(id int, input CreateCampignInput) (Campaign, error)
 }
 
 type service struct {
@@ -60,6 +64,33 @@ func (s *service) Create(input CreateCampignInput) (Campaign, error) {
 	campaign.Slug = slug
 
 	campaign, err := s.repository.Create(campaign)
+
+	if err != nil {
+		return campaign, err
+	}
+
+	return campaign, nil
+}
+
+func (s *service) Update(id int, input CreateCampignInput) (Campaign, error) {
+	campaign, err := s.repository.FindBYID(id)
+	if err != nil {
+		return campaign, err
+	}
+
+	if campaign.UserID != input.User.ID {
+		fmt.Println(campaign.UserID)
+		fmt.Println(input.User.ID)
+		return campaign, errors.New("Only can update your campaign")
+	}
+
+	campaign.Name = input.Name
+	campaign.ShortDescription = input.ShortDescription
+	campaign.Description = input.Description
+	campaign.Perks = input.Perks
+	campaign.GoalAmount = input.GoalAmount
+
+	campaign, err = s.repository.Update(campaign)
 
 	if err != nil {
 		return campaign, err
